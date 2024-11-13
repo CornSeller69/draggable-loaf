@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bredloaf</title>
+    <link rel="shortcut icon" href="loaf.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: rgb(196, 227, 255);
+        }
+        .draggable {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-size: cover;
+            cursor: grab;
+        }
+        .draggable:active {
+            cursor: grabbing;
+        }
+        #infotext {
+            position: absolute;
+            left: 5px;
+            top: -2%;
+            color: rgb(50, 104, 126);
+            pointer-events: none;
+            user-select: none;
+        }
+        #remover {
+            accent-color: red;
+            position: absolute;
+            right: 1%;
+            top: 2%;
+            scale: 3;
+        }
+        .highlight {
+            box-shadow: 0 0 15px 5px red;
+            inset: 0 0 15px 5px red;
+        }
+    </style>
+</head>
+<body>
+    <h5 id="infotext">Grab and drag to move! Double click for bark!<br>Scroll to spawn more loafs! (Warning: Many loafs will make you lag!)<br>Select the checkbox to turn Remover Mode on (removes clicked-on loafs)!<br>Please note some things may need time to load in!</h5>
+    <input type="checkbox" id="remover">
+    <div class="draggable" style="background-image: url('https://raw.githubusercontent.com/CornSeller69/draggable-loaf/refs/heads/main/loaf.png');" ondblclick="playAudio();"></div>
+    <div class="draggable" style="background-image: url('https://raw.githubusercontent.com/CornSeller69/draggable-loaf/refs/heads/main/loaf.png');" ondblclick="playAudio();"></div>
+    <div class="draggable" style="background-image: url('https://raw.githubusercontent.com/CornSeller69/draggable-loaf/refs/heads/main/loaf.png');" ondblclick="playAudio();"></div>
+    <div class="draggable" style="background-image: url('https://raw.githubusercontent.com/CornSeller69/draggable-loaf/refs/heads/main/loaf.png');" ondblclick="playAudio();"></div>
+    <div class="draggable" style="background-image: url('https://raw.githubusercontent.com/CornSeller69/draggable-loaf/refs/heads/main/loaf.png');" ondblclick="playAudio();"></div>
+    <!-- Add more images as needed -->
+
+<script>
+    const removerCheckbox = document.getElementById('remover');
+    remover.checked = false; // makes sure remover mode is off when refreshing
+
+    // Function to play a new instance of the audio
+    function playAudio() {
+        const audio = new Audio('https://github.com/CornSeller69/draggable-loaf/raw/refs/heads/main/greaterdog.mp3');
+        audio.currentTime = 0;
+        audio.play();
+    }
+
+    // Function to play femur sound
+    function playFemurSound() {
+        const audio = new Audio('https://github.com/CornSeller69/draggable-loaf/raw/refs/heads/main/femur.mp3');
+        audio.currentTime = 0;
+        audio.play();
+    }
+
+    const images = document.querySelectorAll('.draggable');
+    let gravity = 0.5;
+    let friction = 0.98;
+
+    function makeDraggable(img) {
+        let posX = Math.random() * (window.innerWidth - img.offsetWidth);
+        let posY = Math.random() * (window.innerHeight - img.offsetHeight);
+        let velocityX = 0;
+        let velocityY = 0;
+        let mouseX, mouseY, isDragging = false;
+        let lastMouseX, lastMouseY;
+
+        img.style.left = `${posX}px`;
+        img.style.top = `${posY}px`;
+
+        img.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            mouseX = e.clientX - posX;
+            mouseY = e.clientY - posY;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            img.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            img.style.cursor = 'grab';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const newPosX = e.clientX - mouseX;
+                const newPosY = e.clientY - mouseY;
+                velocityX = e.clientX - lastMouseX;
+                velocityY = e.clientY - lastMouseY;
+                posX = newPosX;
+                posY = newPosY;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                img.style.left = `${posX}px`;
+                img.style.top = `${posY}px`;
+            }
+        });
+
+        img.addEventListener('click', () => {
+            if (removerCheckbox.checked) {
+                playFemurSound();
+                img.remove();
+            }
+        });
+
+        img.addEventListener('mouseenter', () => {
+            if (removerCheckbox.checked) {
+                img.classList.add('highlight');
+            }
+        });
+
+        img.addEventListener('mouseleave', () => {
+            if (removerCheckbox.checked) {
+                img.classList.remove('highlight');
+            }
+        });
+
+        function update() {
+            if (!isDragging) {
+                velocityY += gravity;
+                posX += velocityX;
+                posY += velocityY;
+                velocityX *= friction;
+                velocityY *= friction;
+
+                // Screen bounds
+                if (posX + img.offsetWidth > window.innerWidth) {
+                    posX = window.innerWidth - img.offsetWidth;
+                    velocityX = -velocityX * friction;
+                }
+                if (posX < 0) {
+                    posX = 0;
+                    velocityX = -velocityX * friction;
+                }
+                if (posY + img.offsetHeight > window.innerHeight) {
+                    posY = window.innerHeight - img.offsetHeight;
+                    velocityY = -velocityY * friction;
+                }
+                if (posY < 0) {
+                    posY = 0;
+                    velocityY = -velocityY * friction;
+                }
+
+                img.style.left = `${posX}px`;
+                img.style.top = `${posY}px`;
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        update();
+    }
+
+    images.forEach(img => makeDraggable(img));
+
+    window.addEventListener('wheel', spawnMore);
+
+    function spawnMore() {
+        console.log('Spawning more loafs...');
+        for (let i = 0; i < 1; i++) {
+            const newLoaf = document.createElement('div');
+            newLoaf.className = 'draggable';
+            newLoaf.style.backgroundImage = "url('https://raw.githubusercontent.com/CornSeller69/draggable-loaf/refs/heads/main/loaf.png')";
+            newLoaf.style.width = '200px';
+            newLoaf.style.height = '200px';
+            newLoaf.style.backgroundSize = 'cover';
+            newLoaf.style.cursor = 'grab';
+            newLoaf.style.position = 'absolute';
+            newLoaf.ondblclick = playAudio;
+            newLoaf.addEventListener('click', () => {
+                if (removerCheckbox.checked) {
+                    playFemurSound();
+                    newLoaf.remove();
+                }
+            });
+            newLoaf.addEventListener('mouseenter', () => {
+                if (removerCheckbox.checked) {
+                    newLoaf.classList.add('highlight');
+                }
+            });
+            newLoaf.addEventListener('mouseleave', () => {
+                if (removerCheckbox.checked) {
+                    newLoaf.classList.remove('highlight');
+                }
+            });
+            document.body.appendChild(newLoaf);
+            makeDraggable(newLoaf);
+        }
+    }
+</script>
+</body>
+</html>
