@@ -1,0 +1,103 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: rgb(196, 227, 255);
+}
+.draggable {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    cursor: grab;
+}
+.draggable:active {
+    cursor: grabbing;
+}
+#infotext {
+    position: absolute;
+    left: 5px;
+    top: -2%;
+    color: rgb(50, 104, 126);
+    pointer-events: none;
+    user-select: none;
+}
+#remover {
+    accent-color: red;
+    position: absolute;
+    right: 1%;
+    top: 2%;
+    scale: 3;
+    cursor: pointer;
+}
+.highlight {
+    box-shadow: 0 0 15px 5px red;
+    inset: 0 0 15px 5px red;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    left: 85%;
+    top: 10px;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.dropdown-content a {
+    cursor: pointer;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+.show {
+    display: block;
+}
+.dropdown button {
+    background-color: #f1f1f1;
+    border: 3px solid gray;
+    height: 30px;
+    min-width: 160px;
+    cursor: all-scroll;
+    font-size: 19px;
+}
+.dropdown button:hover {
+    background-color: #ddd;
+}
+
+* {user-select: none;}
+
+#spawnedLoaf-display {
+    left: 0;
+    right: 0;
+    text-align: center;
+    width: 100%;
+    margin-inline: auto;
+    top: 0;
+    position: absolute;
+    color: rgb(50, 104, 126);
+}
+
+#clear {
+    background-color: #f1f1f1;
+    border: 3px solid gray;
+    height: 30px;
+    min-width: 160px;
+    cursor: pointer;
+    font-size: 19px;
+    position: absolute;
+    right: 15.5%;
+    top: 10px;
+}
+
+#clear:hover {
+    background-color: #d37070;
+}
